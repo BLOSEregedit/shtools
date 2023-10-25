@@ -40,6 +40,8 @@ touch /root/docker-compose.yml
 echo
 echo
 echo "********   安装完成   ********"
+echo
+echo
 # Verify
 curl --version
 echo

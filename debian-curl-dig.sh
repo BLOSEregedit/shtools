@@ -18,6 +18,7 @@ echo
 echo "********   安装完成   ********"
 # Verify
 echo
+echo
 curl --version
 echo
 dig -v
