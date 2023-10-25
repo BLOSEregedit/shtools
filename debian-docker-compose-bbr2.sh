@@ -7,6 +7,9 @@ apt upgrade -y
 # Install necessary dependencies
 apt install curl apt-transport-https ca-certificates software-properties-common gnupg -y
 
+# Install dig
+apt install dnsutils -y
+
 # Add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
@@ -35,11 +38,16 @@ source ~/.bashrc
 touch /root/docker-compose.yml
 
 # Verify
+curl --version
+echo
+dig -v
+echo
 docker --version
+echo
 docker-compose --version
+echo
 
 # Print an empty line
-echo
 echo
 
 # Print a prompt message
