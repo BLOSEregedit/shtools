@@ -13,7 +13,9 @@ apt install dnsutils -y
 # Add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-
+echo
+echo
+echo "********   安装完成   ********"
 # Verify
 echo
 curl --version

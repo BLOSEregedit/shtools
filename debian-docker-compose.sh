@@ -37,6 +37,9 @@ source ~/.bashrc
 # Create configuration file
 touch /root/docker-compose.yml
 
+echo
+echo
+echo "********   安装完成   ********"
 # Verify
 curl --version
 echo
