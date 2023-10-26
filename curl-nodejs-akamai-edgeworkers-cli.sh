@@ -38,7 +38,7 @@ apt install nodejs -y
 
 echo
 echo "********   03 安装 Akamai-cli   ********"
-echo "********   -- 注意需要手动操作，出现提示框，按回车默认选择即可   ********"
+echo "********   -- 注意需要手动操作，出现 3 次交互提示框，按回车默认选择即可   ********"
 echo
 
 wget https://github.com/akamai/cli/releases/download/v1.5.5/akamai-v1.5.5-linux386 && chmod +x akamai-v1.5.5-linux386 && ./akamai-v1.5.5-linux386
@@ -69,7 +69,7 @@ echo
 echo
 akamai --version
 echo
-echo
+echo "edgeworkers 版本号"
 akamai edgeworkers -V
 echo
 echo
