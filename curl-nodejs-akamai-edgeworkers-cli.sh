@@ -5,7 +5,7 @@ echo
 # Update packages
 apt update -y
 apt upgrade -y
-apt install expect -y
+
 
 echo
 echo "********   01 install curl dig   ********"
