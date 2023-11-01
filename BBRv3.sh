@@ -23,6 +23,9 @@ EOF
 
 # 加载配置
 sysctl -p
+echo
+echo "XanMod 内核安装并 BBR3 启用成功。重启后生效"
+echo
 
 
 # 重启

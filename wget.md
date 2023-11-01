@@ -23,7 +23,3 @@ wget "https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh" && c
 
 
 
-https://github.com/akamai/cli/releases/download/v1.5.5/akamai-v1.5.5-linux386
-
-
-https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-nodejs-akamai-edgeworkers-cli.sh
