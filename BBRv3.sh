@@ -1,5 +1,7 @@
 # 初始化
-apt update -y && apt install -y wget gnupg
+apt update -y
+apt upgrade -y
+apt install -y wget gnupg
 
 # 注册 PGP 密钥
 wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg --yes

@@ -15,8 +15,12 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-docker-c
 ## curl、dig、docker、docker-compose
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-docker-compose.sh && chmod +x debian-docker-compose.sh && ./debian-docker-compose.sh
 
-## BBR2
+## BBR2 - 最好使用 debian 10.12 及以下版本
 wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/raw/master/bbr2.sh" && chmod +x bbr2.sh && bash bbr2.sh auto
+
+## BBRv3
+wget "https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh" && chmod +x BBRv3.sh && bash BBRv3.sh
+
 
 
 https://github.com/akamai/cli/releases/download/v1.5.5/akamai-v1.5.5-linux386
