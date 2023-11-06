@@ -1,5 +1,5 @@
--------------------------------------------------------------------------------
-******************************** 服务器初始化脚本 ********************************
+----------------------------------------------------------------------------
+****************************** 服务器初始化脚本 ******************************
 
 ## curl-dig
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig.sh && chmod +x curl-dig.sh && ./curl-dig.sh
@@ -29,5 +29,5 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-
 ## docker-compose-mongo-BBRv3
 wget  https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-mongo-BBRv3.sh && docker-compose-mongo-BBRv3.sh && ./docker-compose-mongo-BBRv3.sh
 
-*******************************************************************************
--------------------------------------------------------------------------------
+***************************************************************************
+----------------------------------------------------------------------------
