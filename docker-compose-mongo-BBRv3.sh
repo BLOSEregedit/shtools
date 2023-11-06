@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# 标记 openssl 不更新，否则会让选择配置文件所在地
+sudo apt-mark hold libcurl4-openssl-dev openssh-sftp-server openssh-server
 # Update packages
 apt update -y
 apt upgrade -y

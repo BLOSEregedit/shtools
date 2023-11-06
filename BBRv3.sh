@@ -1,6 +1,12 @@
+# 标记 openssl 不更新，否则会让选择配置文件所在地
+sudo apt-mark hold libcurl4-openssl-dev openssh-sftp-server openssh-server
+
+
 # 初始化
 apt update -y
 apt upgrade -y
+
+
 apt install -y wget gnupg
 
 # 注册 PGP 密钥
