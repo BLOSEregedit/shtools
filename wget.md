@@ -1,37 +1,30 @@
 
-## curl、dig、bbr
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-curl-dig-bbr2.sh && chmod +x debian-curl-dig-bbr2.sh && ./debian-curl-dig-bbr2.sh
-
-## curl、dig、bbr、docker、docker-compose
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-docker-compose-bbr2.sh && chmod +x debian-docker-compose-bbr2.sh && ./debian-docker-compose-bbr2.sh
-
-
-
-
-
-
-
-## curl、dig
-
-
-## curl、dig、docker、docker-compose
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-docker-compose.sh && chmod +x debian-docker-compose.sh && ./debian-docker-compose.sh
-
-
 ## curl-dig
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/debian-curl-dig.sh && chmod +x debian-curl-dig.sh && ./debian-curl-dig.sh
-
-
-
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig.sh && chmod +x curl-dig.sh && ./curl-dig.sh
 
 ## docker-compose
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose.sh && chmod +x docker-compose.sh && ./docker-compose.sh
 
-
+----------------------------------------
 
 ## akamai-edgeworkers-cli
 ### 安装最后需要回车三次
 
-----------------------------------------
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
 
+----------------------------------------
+以下为 BBRv3 相关         ξ( ✿＞◡❛)
+----------------------------------------
 ## BBRv3
-wget "https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh" && chmod +x BBRv3.sh && bash BBRv3.sh
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh && chmod +x BBRv3.sh && bash BBRv3.sh
+
+## curl-dig-BBRv3
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig-BBRv3.sh && chmod +x curl-dig-BBRv3.sh && ./curl-dig-BBRv3.sh
+
+## docker-compose-BBRv3
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-BBRv3.sh && chmod +x docker-compose-BBRv3.sh && ./docker-compose-BBRv3.sh
+
+
+## docker-compose-mongo-BBRv3
+wget  https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-mongo-BBRv3.sh && docker-compose-mongo-BBRv3.sh && ./docker-compose-mongo-BBRv3.sh
+
