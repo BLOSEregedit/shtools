@@ -5,16 +5,16 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig.sh && 
 ## docker-compose
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose.sh && chmod +x docker-compose.sh && ./docker-compose.sh
 
-----------------------------------------
+--------------------------------------------------------------------------------
 
 ## akamai-edgeworkers-cli
 ### 安装最后需要回车三次
 
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
 
-----------------------------------------
+--------------------------------------------------------------------------------
 以下为 BBRv3 相关         ξ( ✿＞◡❛)
-----------------------------------------
+--------------------------------------------------------------------------------
 ## BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh && chmod +x BBRv3.sh && bash BBRv3.sh
 
