@@ -87,10 +87,5 @@ echo "********   安装 BBRv3   ********"
 
 wget "https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh" && chmod +x BBRv3.sh && bash BBRv3.sh
 
-# Download and run installation script
-curl -sS -O https://raw.githubusercontent.com/kejilion/sh/main/kejilion.sh && chmod +x kejilion.sh && ./kejilion.sh <<EOF
-13
-16
-Y
-EOF
+
 

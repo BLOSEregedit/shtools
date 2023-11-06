@@ -51,12 +51,12 @@ echo
 echo
 
 # Print a prompt message
-echo "现在执行 BBR2 开启，之后会重启服务器"
+echo "现在执行 BBRv3 开启，之后会重启服务器"
 # Print an empty line
 echo
 echo
 
 
-# BBR2
-wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/raw/master/bbr2.sh" && chmod +x bbr2.sh && bash bbr2.sh auto
+# BBRv3
 
+wget "https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh" && chmod +x BBRv3.sh && bash BBRv3.sh
