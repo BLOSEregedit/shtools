@@ -32,6 +32,7 @@ sysctl -p
 echo
 echo "XanMod 内核安装并 BBR3 启用成功。重启后生效"
 echo
+rm -f /etc/apt/sources.list.d/xanmod-release.list
 
 
 # 重启
