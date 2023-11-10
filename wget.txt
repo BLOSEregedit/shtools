@@ -20,7 +20,7 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/akamai-edgework
 ## BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh && chmod +x BBRv3.sh && bash BBRv3.sh
 
-## curl-dig-BBRv3
+## curl-dig-mtr-BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig-BBRv3.sh && chmod +x curl-dig-BBRv3.sh && ./curl-dig-BBRv3.sh
 
 ## docker-compose-BBRv3
