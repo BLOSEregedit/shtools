@@ -24,6 +24,9 @@ echo
 curl --version
 echo
 dig -v
+echo
+mtr -v
+echo
 
 
 

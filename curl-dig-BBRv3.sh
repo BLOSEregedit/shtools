@@ -20,6 +20,9 @@ echo
 curl --version
 echo
 dig -v
+echo
+mtr -v
+
 
 
 # Print an empty line
