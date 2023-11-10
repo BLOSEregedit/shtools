@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 **************************** 服务器初始化脚本 ****************************
 
-## curl-dig
+## curl-dig-mtr
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig.sh && chmod +x curl-dig.sh && ./curl-dig.sh
 
 ## docker-compose

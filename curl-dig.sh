@@ -7,6 +7,7 @@ apt upgrade -y
 
 # Install necessary dependencies
 apt install curl apt-transport-https ca-certificates software-properties-common gnupg -y
+apt install mtr -y
 
 # Install dig
 apt install dnsutils -y
