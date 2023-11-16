@@ -21,12 +21,16 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh 
 **************************** 02 oneClick 脚本 ****************************
 
 ## 01 Akamai-edgeworkers-cli
-### 该脚本会同时安装 node.js  Akamai-cli  edgeworker
-### 安装最后需要回车三次
+### 该脚本会同时安装 node.js  Akamai-cli  edgeworker 「安装最后需要回车三次」
+
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
+
+--
 
 ## 02 compose + Curl..
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/compose-curl.sh && chmod +x compose-curl.sh && ./compose-curl.sh
+
+--
 
 ## 03 compose + mongo
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/compose-mongo.sh && chmod +x compose-mongo.sh && ./compose-mongo.sh
