@@ -1,33 +1,43 @@
 ----------------------------------------------------------------------------
-**************************** 服务器初始化脚本 ****************************
+**************************** 01 basic 脚本 ****************************
 
-## curl-dig-mtr
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig.sh && chmod +x curl-dig.sh && ./curl-dig.sh
+## 01 curl-mtr-dig
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/curl-mtr-dig.sh && chmod +x curl-mtr-dig.sh && ./curl-mtr-dig.sh
 
-## docker-compose
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose.sh && chmod +x docker-compose.sh && ./docker-compose.sh
+## 02 docker
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh && chmod +x docker.sh && ./docker.sh
+
+## 03 docker-compose 「自动安装 docker」
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker-compose.sh && chmod +x docker-compose.sh && ./docker-compose.sh
+
+## 04 mongoDB 「须先装好 docker-compose」
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/mongoDB.sh && chmod +x mongoDB.sh && ./mongoDB.sh
+
+## 05 BBRv3
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
 
 --------------------------------------------------------------------------------
+**************************** 02 oneClick 脚本 ****************************
 
-## akamai-edgeworkers-cli
+## 01 Akamai-edgeworkers-cli
+### 该脚本会同时安装 node.js  Akamai-cli  edgeworker
 ### 安装最后需要回车三次
-
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
 
---------------------------------------------------------------------------------
-以下为 BBRv3 相关                     ξ( ✿＞◡❛)
---------------------------------------------------------------------------------
-## BBRv3
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/BBRv3.sh && chmod +x BBRv3.sh && bash BBRv3.sh
+## 02 compose + Curl..
 
-## curl-dig-mtr-BBRv3
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/curl-dig-BBRv3.sh && chmod +x curl-dig-BBRv3.sh && ./curl-dig-BBRv3.sh
 
-## docker-compose-BBRv3
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-BBRv3.sh && chmod +x docker-compose-BBRv3.sh && ./docker-compose-BBRv3.sh
+## 03 compose + mongo
 
-## docker-compose-mongo-BBRv3
-wget  https://raw.githubusercontent.com/BLOSEregedit/shtools/main/docker-compose-mongo-BBRv3.sh && docker-compose-mongo-BBRv3.sh && ./docker-compose-mongo-BBRv3.sh
+
+
+## 04 BBRv3 + mongo
+
+## 05 BBRv3 + compose
+
+## 06 BBRv3 + Curl..
+
+
 
 ***************************************************************************
 ----------------------------------------------------------------------------
