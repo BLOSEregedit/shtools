@@ -12,8 +12,8 @@ echo
 echo "02 添加 GPG key "
 echo
 # Add Docker's official GPG key:
-sudo apt update
-sudo apt install ca-certificates curl
+sudo apt update -y
+sudo apt install ca-certificates curl -y
 sudo apt install gnupg -y
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
