@@ -1,32 +1,45 @@
 #!/bin/bash
+
+echo
+echo "********    安装 curl ｜ mtr ｜ dig     ─=≡Σ((( つ•̀ω•́)つ     ********"
+echo
+echo "01 初始化 "
+echo
+
 # 标记 openssl 不更新，否则会让选择配置文件所在地
 sudo apt-mark hold libcurl4-openssl-dev openssh-sftp-server openssh-server
+
 # Update packages
 apt update -y
 apt upgrade -y
 
+
+echo
+echo "01 Install curl "
+echo
 # Install necessary dependencies
 apt install curl apt-transport-https ca-certificates software-properties-common gnupg -y
+
+echo
+echo "02 Install mtr "
+echo
 apt install mtr -y
 
-# Install dig
+
+echo
+echo "03 Install dig "
+echo
 apt install dnsutils -y
 
-# Add Docker's official GPG key
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
 echo
 echo
-echo "********   安装完成   ********"
+echo "********     安装完成  ( ´∀｀)つt[ ]    ********"
 # Verify
 echo
 echo
 curl --version
 echo
-dig -v
-echo
 mtr -v
 echo
-
-
-
+dig -v
+echo
