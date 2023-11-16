@@ -16,27 +16,29 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/mongoDB.s
 ## 05 BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
 
+
 --------------------------------------------------------------------------------
 **************************** 02 oneClick 脚本 ****************************
 
 ## 01 Akamai-edgeworkers-cli
 ### 该脚本会同时安装 node.js  Akamai-cli  edgeworker
 ### 安装最后需要回车三次
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/akamai-edgeworkers-cli.sh && chmod +x akamai-edgeworkers-cli.sh && ./akamai-edgeworkers-cli.sh
 
 ## 02 compose + Curl..
-
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/compose-curl.sh && chmod +x compose-curl.sh && ./compose-curl.sh
 
 ## 03 compose + mongo
-
-
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/compose-mongo.sh && chmod +x compose-mongo.sh && ./compose-mongo.sh
 
 ## 04 BBRv3 + mongo
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-mongo.sh && chmod +x BBRv3-mongo.sh && ./BBRv3-mongo.sh
 
 ## 05 BBRv3 + compose
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-compose.sh && chmod +x BBRv3-compose.sh && ./BBRv3-compose.sh
 
 ## 06 BBRv3 + Curl..
-
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-curl.sh && chmod +x BBRv3-curl.sh && ./BBRv3-curl.sh
 
 
 ***************************************************************************
