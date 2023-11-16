@@ -60,6 +60,7 @@ rm -f /etc/apt/sources.list.d/xanmod-release.list
 echo
 echo
 echo "********    MM 我要起飞 La～   ********"
+echo
 echo " ✧(๑•̀ㅂ•́)و▄︻┻┳━══━━  ·.\`.\`.\`.　"
 echo
 echo
