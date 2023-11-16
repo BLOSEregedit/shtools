@@ -38,12 +38,11 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/compos
 ## 04 BBRv3 + mongo
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-mongo.sh && chmod +x BBRv3-mongo.sh && ./BBRv3-mongo.sh
 
-## 05 BBRv3 + compose
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-compose.sh && chmod +x BBRv3-compose.sh && ./BBRv3-compose.sh
-
-## 06 BBRv3 + Curl..
+## 05 BBRv3 + Curl..
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-curl.sh && chmod +x BBRv3-curl.sh && ./BBRv3-curl.sh
 
+## 06 BBRv3 + compose
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-compose.sh && chmod +x BBRv3-compose.sh && ./BBRv3-compose.sh
 
-***************************************************************************
+
 ----------------------------------------------------------------------------
