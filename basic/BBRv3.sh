@@ -16,10 +16,10 @@ apt upgrade -y
 
 
 apt install -y wget gnupg
-
+echo
 echo
 echo "02 注册 PGP 密钥 "
-echo
+
 # 注册 PGP 密钥
 wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg --yes
 
