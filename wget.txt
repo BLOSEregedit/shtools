@@ -40,4 +40,16 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-
 ## 06 BBRv3 + compose
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-compose.sh && chmod +x BBRv3-compose.sh && ./BBRv3-compose.sh
 
+
+------------------------    03 预热专用脚本    ----------------------------
+## 00 BBRv3
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
+
+## 01 MongoDB-preHeat
+wget https://raw.githubusercontent.com/BLOSEregedit/shtools/refs/heads/main/preHeat/mongo-preHeat.sh && chmod +x mongo-preHeat.sh && ./mongo-preHeat.sh
+
+
+
+
+
 ----------------------------------------------------------------------------
