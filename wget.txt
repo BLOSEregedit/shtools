@@ -41,7 +41,7 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-compose.sh && chmod +x BBRv3-compose.sh && ./BBRv3-compose.sh
 
 
-------------------------    03 预热专用脚本    ----------------------------
+***********************    03 预热专用脚本    ***********************
 
 ## 00 BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
