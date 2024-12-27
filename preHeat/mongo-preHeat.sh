@@ -34,3 +34,16 @@ echo "Starting MongoDB..."
 /root/mongodb-linux-x86_64-debian12-8.0.4/bin/mongod -f /root/mongodb.conf
 
 echo "MongoDB installation and setup completed."
+
+
+
+https://downloads.mongodb.com/compass/mongodb-mongosh_2.3.7_amd64.deb
+
+mkidr /root/mongodb/mongosh
+dpkg -x mongodb-mongosh_2.3.7_amd64.deb /root/mongodb/mongosh
+mv /root/mongosh/usr/bin/mongosh /root/12
+
+
+
+mongosh --port 37017 --eval 'db.getSiblingDB("admin").createUser({ user: "preheat", pwd: "11223344", roles: [{ role: "root", db: "admin" }] });'
+mongosh --port 37017 -u "preheat" -p "11223344" --authenticationDatabase "admin"
