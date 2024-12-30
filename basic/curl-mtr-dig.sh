@@ -43,9 +43,9 @@ apt install htop -y
 
 
 echo
-echo "06 Install aria2  "
+echo "06 Install aria2 screen "
 echo
-apt install aria2 -y
+apt install aria2 screen -y
 
 echo
 echo
