@@ -32,9 +32,20 @@ echo
 apt install dnsutils -y
 
 echo
-echo "04 Install nload htop aria2 "
+echo "04 Install nload"
 echo
-apt install nload htop aria2 -y
+apt install nload -y
+
+echo
+echo "05 Install htop  "
+echo
+apt install htop -y
+
+
+echo
+echo "06 Install aria2  "
+echo
+apt install aria2 -y
 
 echo
 echo
