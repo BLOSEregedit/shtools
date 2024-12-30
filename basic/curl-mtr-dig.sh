@@ -32,6 +32,11 @@ echo
 apt install dnsutils -y
 
 echo
+echo "04 Install nload htop aria2 "
+echo
+apt install nload htop aria2 -y
+
+echo
 echo
 echo "********     安装完成  ( ´∀｀)つt[ ]    ********"
 # Verify
