@@ -57,27 +57,25 @@ else
     echo "该 CPU 不支持 BBRv3 "
 fi
 
-
-
 echo
 echo
 echo "02 注册 PGP 密钥 "
 
 # 注册 PGP 密钥
-wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg --yes
+wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg --yes
 
 
 echo
 echo "03 添加存储库 "
 echo
 # 添加存储库
-echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | tee /etc/apt/sources.list.d/xanmod-release.list
+echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
 
 echo
 echo "04 Install "
 echo
 # 安装
-apt update -y && apt install -y linux-xanmod-x64v${level}
+sudo apt update -y && sudo apt install -y linux-xanmod-x64v${level}
 
 
 echo
