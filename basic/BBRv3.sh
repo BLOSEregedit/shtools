@@ -49,10 +49,9 @@ fi
 
 if [[ $level -gt 0 ]]; then
     echo
-    echo " ε٩(๑> ₃ <)۶з "
     echo "CPU 支持 XanMod-x64v$level "
     echo
-    exit $((level + 1))
+    echo
 
 else
     echo "该 CPU 不支持 BBRv3 "
