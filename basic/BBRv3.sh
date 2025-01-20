@@ -16,7 +16,7 @@ apt update -y
 apt upgrade -y
 
 
-apt install -y wget gnupg
+apt install -y wget gnupg gpg
 echo
 echo
 echo "01 检测 CPU 架构"
@@ -62,7 +62,7 @@ echo
 echo "02 注册 PGP 密钥 "
 
 # 注册 PGP 密钥
-wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg --yes
+wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
 
 
 echo
@@ -75,7 +75,8 @@ echo
 echo "04 Install "
 echo
 # 安装
-sudo apt update -y && sudo apt install -y linux-xanmod-x64v${level}
+sudo apt update -y
+sudo apt install linux-xanmod-x64v${level} -y
 
 
 echo
