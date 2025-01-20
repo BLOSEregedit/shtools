@@ -107,4 +107,4 @@ echo
 echo
 
 # 重启，优雅的处理正在执行的服务
-server_reboot
+reboot
