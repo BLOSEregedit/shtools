@@ -8,7 +8,7 @@ echo
 
 
 # 标记 openssl 不更新，否则会让选择配置文件所在地
-sudo apt-mark hold libcurl4-openssl-dev openssh-sftp-server openssh-server
+# sudo apt-mark hold libcurl4-openssl-dev openssh-sftp-server openssh-server
 
 
 # 初始化
