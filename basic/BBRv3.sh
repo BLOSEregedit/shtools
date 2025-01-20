@@ -2,7 +2,8 @@
 echo
 echo "********    BBRv3  冲啊  ─=≡Σ((( つ•̀ω•́)つ     ********"
 echo
-echo "01 初始化 "
+echo
+echo "00 系统初始化 "
 echo
 
 
@@ -16,6 +17,47 @@ apt upgrade -y
 
 
 apt install -y wget gnupg
+echo
+echo
+echo "01 检测 CPU 架构"
+echo
+level=0
+
+# 读取 /proc/cpuinfo 文件，检查 flags 行
+while read -r line; do
+    if [[ "$line" =~ flags ]]; then
+        break
+    fi
+done < /proc/cpuinfo
+
+# 检查 CPU 支持的特性
+if [[ "$line" =~ lm && "$line" =~ cmov && "$line" =~ cx8 && "$line" =~ fpu && "$line" =~ fxsr && "$line" =~ mmx && "$line" =~ syscall && "$line" =~ sse2 ]]; then
+    level=1
+fi
+
+if [[ $level -eq 1 && "$line" =~ cx16 && "$line" =~ lahf && "$line" =~ popcnt && "$line" =~ sse4_1 && "$line" =~ sse4_2 && "$line" =~ ssse3 ]]; then
+    level=2
+fi
+
+if [[ $level -eq 2 && "$line" =~ avx && "$line" =~ avx2 && "$line" =~ bmi1 && "$line" =~ bmi2 && "$line" =~ f16c && "$line" =~ fma && "$line" =~ abm && "$line" =~ movbe && "$line" =~ xsave ]]; then
+    level=3
+fi
+
+if [[ $level -eq 3 && "$line" =~ avx512f && "$line" =~ avx512bw && "$line" =~ avx512cd && "$line" =~ avx512dq && "$line" =~ avx512vl ]]; then
+    level=4
+fi
+
+if [[ $level -gt 0 ]]; then
+    echo "CPU 支持 XanMod-x64v$level "
+    exit $((level + 1))
+
+else
+    echo "该 CPU 不支持 BBRv3 "
+    exit 1
+fi
+
+
+
 echo
 echo
 echo "02 注册 PGP 密钥 "
@@ -34,7 +76,7 @@ echo
 echo "04 Install "
 echo
 # 安装
-apt update -y && apt install -y linux-xanmod-x64v4
+apt update -y && apt install -y linux-xanmod-x64v${level}
 
 
 echo
@@ -53,7 +95,7 @@ sysctl -p
 
 
 echo
-echo "XanMod 内核安装并 BBR3 启用成功"
+echo "XanMod 内核 + BBRv3 启用成功"
 echo "清理环境，自动重启"
 rm -f /etc/apt/sources.list.d/xanmod-release.list
 
@@ -65,5 +107,5 @@ echo " ✧(๑•̀ㅂ•́)و▄︻┻┳━══━━  ·.\`.\`.\`.　"
 echo
 echo
 
-# 重启
-reboot
+# 重启，优雅的处理正在执行的服务
+server_reboot
