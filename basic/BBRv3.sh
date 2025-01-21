@@ -71,14 +71,14 @@ echo "02 注册 PGP 密钥 "
 
 
 # 注册 PGP 密钥
-wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -vo /etc/apt/keyrings/xanmod-archive-keyring.gpg
+wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
+
 
 echo
 echo "03 添加存储库 "
 echo
-# 添加存储库
-echo 'deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] https://sourceforge.net/projects/xanmod/files/ releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
-
+# 添加存储库(源)
+echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | tee /etc/apt/sources.list.d/xanmod-release.list
 echo
 echo "04 Install "
 echo
