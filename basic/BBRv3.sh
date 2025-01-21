@@ -13,10 +13,17 @@ echo
 
 # 初始化
 apt update -y
+
+# 如果标记不更新，可能会有安全问题，因此使用这个命令，单独无交互弹窗安装 openssl 及对应依赖
+sudo DEBIAN_FRONTEND=noninteractive apt upgrade openssl -y
+
 apt upgrade -y
 
-
 apt install -y wget gnupg gpg
+
+# 清理旧的包
+sudo apt autoremove
+
 echo
 echo
 echo "01 检测 CPU 架构"
@@ -70,7 +77,7 @@ echo
 echo "03 添加存储库 "
 echo
 # 添加存储库
-echo 'deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
+echo 'deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] https://sourceforge.net/projects/xanmod/files/releases/ releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
 
 echo
 echo "04 Install "
@@ -109,4 +116,4 @@ echo
 echo
 
 # 重启，优雅的处理正在执行的服务
-reboot
+# reboot
