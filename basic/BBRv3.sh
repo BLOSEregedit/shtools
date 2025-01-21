@@ -22,7 +22,7 @@ apt upgrade -y
 apt install -y wget gnupg gpg
 
 # 清理旧的包
-sudo apt autoremove
+sudo apt autoremove -y
 
 echo
 echo
