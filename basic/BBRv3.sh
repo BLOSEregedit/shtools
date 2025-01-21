@@ -75,7 +75,21 @@ echo "02 注册 PGP 密钥 "
 
 
 ## 发现原来的地址用阿里访问一直出现 403，且会跳转到 gitlab 上去
-wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
+# wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
+
+echo "注册 PGP 密钥..."
+if wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+    echo "密钥添加成功!"
+else
+    echo "添加失败，正在请求备用地址..."
+    if wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+        echo "密钥添加成功(备用)!"
+    else
+        echo "密钥添加失败，请手动处理，或更换系统后再试"
+        exit 1
+    fi
+fi
+
 
 
 echo
