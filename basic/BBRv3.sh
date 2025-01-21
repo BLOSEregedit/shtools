@@ -78,11 +78,11 @@ echo "02 注册 PGP 密钥 "
 # wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
 echo
 echo "请求主站点..."
-if wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+if wget -qO - https://dl.xanmod.org/archive.key | yes | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
     echo "密钥添加成功!"
 else
     echo "添加失败，正在请求备用地址..."
-    if yes | wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+    if wget -qO - https://gitlab.com/afrd.gpg | yes | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
         echo "密钥添加成功!"
     else
         echo "密钥添加失败，请手动处理，或更换系统后再试"
