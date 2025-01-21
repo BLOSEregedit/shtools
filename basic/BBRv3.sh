@@ -15,14 +15,14 @@ echo
 apt update -y
 
 # 如果标记不更新，可能会有安全问题，因此使用这个命令，单独无交互弹窗安装 openssl 及对应依赖
-sudo DEBIAN_FRONTEND=noninteractive apt upgrade openssl -y
+DEBIAN_FRONTEND=noninteractive apt upgrade openssl -y
 
 apt upgrade -y
 
 apt install -y wget gnupg gpg
 
 # 清理旧的包
-sudo apt autoremove -y
+apt autoremove -y
 
 echo
 echo
@@ -83,8 +83,8 @@ echo
 echo "04 Install "
 echo
 # 安装
-sudo apt update -y
-sudo apt install linux-xanmod-x64v${level} -y
+apt update -y
+apt install linux-xanmod-x64v${level} -y
 
 
 echo
