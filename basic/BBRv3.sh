@@ -77,7 +77,7 @@ echo
 echo "03 添加存储库 "
 echo
 # 添加存储库
-echo 'deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] https://sourceforge.net/projects/xanmod/files/releases/ releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
+echo 'deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] https://sourceforge.net/projects/xanmod/files/ releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
 
 echo
 echo "04 Install "
