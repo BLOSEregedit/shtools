@@ -116,4 +116,4 @@ echo
 echo
 
 # 重启，优雅的处理正在执行的服务
-# reboot
+reboot
