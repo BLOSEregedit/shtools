@@ -73,16 +73,20 @@ echo "02 注册 PGP 密钥 "
 # 注册 PGP 密钥
 # wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
 
-
 ## 发现原来的地址用阿里访问一直出现 403，且会跳转到 gitlab 上去
 # wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
+
+# 定义密钥文件路径，在每次请求前都清理一遍
+KEYRING_PATH="/usr/share/keyrings/xanmod-archive-keyring.gpg"
 echo
 echo "请求主站点..."
-if wget -qO - https://dl.xanmod.org/archive.key | yes | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
+if wget -qO - https://dl.xanmod.org/archive.key | yes | gpg --dearmor -o "$KEYRING_PATH"; then
     echo "密钥添加成功!"
 else
     echo "添加失败，正在请求备用地址..."
-    if wget -qO - https://gitlab.com/afrd.gpg | yes | gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg; then
+    rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
+    if wget -qO - https://gitlab.com/afrd.gpg | yes | gpg --dearmor -o "$KEYRING_PATH"; then
         echo "密钥添加成功!"
     else
         echo "密钥添加失败，请手动处理，或更换系统后再试"
