@@ -46,7 +46,9 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/oneclick/BBRv3-
 ## 00 BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
 
-## 01 MongoDB-preHeat
+## 01 MongoDB-preHeat - 宿主机安装，目录在 root 下
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/refs/heads/main/preHeat/mongo-preHeat.sh && chmod +x mongo-preHeat.sh && ./mongo-preHeat.sh
+
+## 02 MongoDB - 宿主机安装，SCP 项目
 
 ----------------------------------------------------------------------------
