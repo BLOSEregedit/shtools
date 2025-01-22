@@ -65,7 +65,6 @@ else
 fi
 
 echo
-echo
 echo "02 注册 PGP 密钥 "
 
 
@@ -140,10 +139,12 @@ echo " ✧(๑•̀ㅂ•́)و▄︻┻┳━══━━  ·.\`.\`.\`.　"
 echo
 echo
 echo
-#查看安全运行内核
-echo "当前运行内核如下，若非 XanMod，请重启后再执行 'uname -r' "
+echo
+#查看当前运行内核
+echo "TIP: 当前运行内核如下，若非 XanMod，请重启后再执行 'uname -r' 查看效果"
 uname -r
 echo
+echo
 
-# 重启，优雅的处理正在执行的服务
-# reboot
+# 重启
+reboot
