@@ -82,12 +82,14 @@ echo
 echo "请求主站点..."
 rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
 if wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o "$KEYRING_PATH"; then
-    echo "密钥添加成功!"
+    echo "密钥添加成功!!"
 else
+    echo
     echo "添加失败，正在请求备用地址..."
     rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
     if wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o "$KEYRING_PATH"; then
-        echo "密钥添加成功!"
+        echo
+        echo "密钥添加成功!!"
     else
         echo "密钥添加失败，请手动处理，或更换系统后再试"
         exit 1
@@ -101,6 +103,7 @@ echo "03 添加存储库 "
 echo
 # 添加存储库(源)
 echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | tee /etc/apt/sources.list.d/xanmod-release.list
+echo
 echo
 echo "04 Install "
 echo
@@ -136,6 +139,11 @@ echo
 echo " ✧(๑•̀ㅂ•́)و▄︻┻┳━══━━  ·.\`.\`.\`.　"
 echo
 echo
+echo
+#查看安全运行内核
+echo "当前运行内核如下，若非 XanMod，请重启后再执行 'uname -r' "
+uname -r
+echo
 
 # 重启，优雅的处理正在执行的服务
-reboot
+# reboot
