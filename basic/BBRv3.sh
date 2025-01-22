@@ -81,12 +81,12 @@ KEYRING_PATH="/usr/share/keyrings/xanmod-archive-keyring.gpg"
 echo
 echo "请求主站点..."
 rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
-if wget -qO - https://dl.xanmod.org/archive.key | yes | gpg --dearmor -o "$KEYRING_PATH"; then
+if wget -qO - https://dl.xanmod.org/archive.key | gpg --dearmor -o "$KEYRING_PATH"; then
     echo "密钥添加成功!"
 else
     echo "添加失败，正在请求备用地址..."
     rm -f "$KEYRING_PATH"  # 删除可能存在的密钥文件
-    if wget -qO - https://gitlab.com/afrd.gpg | yes | gpg --dearmor -o "$KEYRING_PATH"; then
+    if wget -qO - https://gitlab.com/afrd.gpg | gpg --dearmor -o "$KEYRING_PATH"; then
         echo "密钥添加成功!"
     else
         echo "密钥添加失败，请手动处理，或更换系统后再试"
