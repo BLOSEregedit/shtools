@@ -1,149 +1,191 @@
 #!/bin/bash
 
-
 echo
-echo "==========     01  安装 mongoDB  ─=≡Σ((( つ•̀ω•́)つ           ==================="
+echo "================================================================================"
+echo "                 🚀 MongoDB 8.2.1 自动化部署脚本                               "
+echo "================================================================================"
 echo
-echo "## 部署版本: MongoDB 8.2.1 (TGZ 模式)"
-echo "## 目录结构: Binaries -> /opt/mongodb/"
-echo "##          Config   -> /data/mongodb/"
-echo "##          Data     -> /var/lib/mongodb/"
-echo "##          Logs     -> /var/log/mongodb/"
+echo "📦 部署版本: MongoDB 8.2.1 (TGZ 二进制模式)"
 echo
-echo "=============================================================================="
+echo "📂 目录规划:"
+echo "   • 二进制文件  /opt/mongodb/bin/"
+echo "   • 配置文件    /data/mongodb/mongodb.conf"
+echo "   • 数据目录    /var/lib/mongodb/"
+echo "   • 日志目录    /var/log/mongodb/"
+echo
+echo "================================================================================"
 echo
 echo
-echo "--- 1. 系统基础更新与工具安装 ---"
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 步骤 1/4: 系统基础更新与依赖安装                                             │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
 # 更新系统包列表并升级已安装的包
+echo "📌 更新系统软件包..."
 apt update -y
 apt upgrade -y
+
 # 安装必要的工具
 echo
-echo "Installing necessary tools..."
+echo "📌 安装基础工具 (wget, curl)..."
 apt install wget curl -y
+
 echo
-# 安装 MongoDB 运行时依赖库
-echo "Installing MongoDB dependencies..."
+echo "📌 安装 MongoDB 运行时依赖库..."
 apt install libcurl4 libgssapi-krb5-2 libldap-common libwrap0 libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit openssl liblzma5 -y
+
+echo
+echo "✅ 系统依赖安装完成"
 echo
 echo
-echo "--- 2. 下载 MongoDB 文件 ---"
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 步骤 2/4: 下载 MongoDB 文件                                                  │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
 MONGODB_TGZ="mongodb-linux-x86_64-debian12-8.2.1.tgz"
 MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_TGZ}"
-DOWNLOAD_DIR="/root" # 临时下载目录
+DOWNLOAD_DIR="/root"
 CONFIG_DIR="/data/mongodb"
 CONFIG_FILE="${CONFIG_DIR}/mongodb.conf"
 
 # 创建配置文件目录
-echo "   --> 创建配置文件目录 ${CONFIG_DIR}"
+echo "📌 创建配置文件目录..."
+echo "   → ${CONFIG_DIR}"
 mkdir -p "${CONFIG_DIR}"
 
 # 下载 MongoDB 配置文件到指定目录
-echo "   --> 下载配置文件到 ${CONFIG_FILE}"
+echo
+echo "📌 下载配置文件..."
+echo "   → 目标: ${CONFIG_FILE}"
+echo "   → 来源: GitHub repository"
 wget -O "${CONFIG_FILE}" https://raw.githubusercontent.com/BLOSEregedit/shtools/refs/heads/main/scp/mongodb.conf
 
-
 # 下载 MongoDB 压缩包
-echo "   --> 下载 MongoDB 二进制压缩包 (${MONGODB_TGZ})"
+echo
+echo "📌 下载 MongoDB 二进制包..."
+echo "   → 文件: ${MONGODB_TGZ}"
+echo "   → 大小: ~500MB，请耐心等待..."
 wget -O "${DOWNLOAD_DIR}/${MONGODB_TGZ}" "${MONGODB_URL}"
 
 echo
-echo "--- 3. 创建目录 ---"
-# (已移除) 不再创建 'mongodb' 用户，将使用 'root' 运行。
+echo "✅ 文件下载完成"
+echo
+echo
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 步骤 3/4: 解压安装与目录初始化                                               │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
 
 INSTALL_DIR="/opt/mongodb"
 DATA_DIR="/var/lib/mongodb"
 LOG_DIR="/var/log/mongodb"
 PID_DIR="/var/run/mongodb"
 
-echo "   --> 执行目录 ${INSTALL_DIR}"
-echo "   --> 数据目录 ${DATA_DIR}"
-echo "   --> 日志目录 ${LOG_DIR}"
+echo "📌 初始化目录结构..."
+echo "   → 执行目录: ${INSTALL_DIR}"
+echo "   → 数据目录: ${DATA_DIR}"
+echo "   → 日志目录: ${LOG_DIR}"
+echo "   → PID 目录: ${PID_DIR}"
 
 # 创建安装目录、数据目录和日志目录
 mkdir -p "${INSTALL_DIR}" "${DATA_DIR}" "${LOG_DIR}" "${PID_DIR}"
+
 echo
-
-
-echo "--- 4. 解压缩包 ---"
+echo "📌 解压 MongoDB 压缩包..."
 # 解压到 /opt/mongodb 目录，并去除压缩包中的顶层目录
 tar -zxvf "${DOWNLOAD_DIR}/${MONGODB_TGZ}" -C "${INSTALL_DIR}" --strip-components 1
-echo "   -> 解压完成，二进制文件位于 ${INSTALL_DIR}/bin/"
+echo
+echo "   ✓ 解压完成，二进制文件位于 ${INSTALL_DIR}/bin/"
 
 # 清理下载的压缩包
 # rm "${DOWNLOAD_DIR}/${MONGODB_TGZ}"
 
 echo
-echo "--- 5. 启动 MongoDB 服务 ---"
+echo "✅ MongoDB 安装完成"
+echo
+echo
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 步骤 4/4: 启动服务与配置管理                                                 │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
+echo "📌 启动 MongoDB 进程..."
 # 依赖配置文件中的 fork 选项在后台运行
 "${INSTALL_DIR}/bin/mongod" -f "${CONFIG_FILE}" --logpath "${LOG_DIR}/mongod.log" --logappend --pidfilepath "${PID_DIR}/mongod.pid"
 
 sleep 5 # 等待服务启动
 
-echo "MongoDB 进程已尝试在后台启动。请检查日志文件 ${LOG_DIR}/mongod.log"
+echo "   ✓ MongoDB 进程已在后台启动"
+echo "   ℹ 日志文件: ${LOG_DIR}/mongod.log"
 echo
 echo
 echo
-echo "==========     02  安装 mongosh  ─=≡Σ((( つ•̀ω•́)つ           ==================="
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 附加工具: 安装 mongosh 客户端                                                │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
-# echo "--- 1. 准备目录 ---"
-echo "创建解压目录和最终 bin 目录"
+echo "📌 准备目录..."
 mkdir -p /data/mongosh /opt/mongodb/bin
 
-echo " --- 2. 下载 DEB 文件  V2.5.9 ---  "
-# 直接下载到 /root/ 目录下，使用完整文件名
+echo
+echo "📌 下载 mongosh 2.5.9 (DEB 包)..."
 wget -O /root/mongodb-mongosh_2.5.9_arm64.deb https://downloads.mongodb.com/compass/mongodb-mongosh_2.5.9_amd64.deb
 
-
-# --- 3.  ---
-echo " --- 3. 使用 dpkg -x 解压 ---  "
-echo "   --> /data/mongosh/"
-dpkg -x /root/mongodb-mongosh_2.5.9_arm64.deb /data/mongosh
 echo
-echo " --- 4. mv & 创建软链接---  "
-mv /data/mongosh/usr/bin/mongosh /opt/mongodb/bin/
+echo "📌 解压 DEB 包..."
+dpkg -x /root/mongodb-mongosh_2.5.9_arm64.deb /data/mongosh
 
-# 创建软链接到全局可执行路径
+echo
+echo "📌 移动可执行文件并创建软链接..."
+mv /data/mongosh/usr/bin/mongosh /opt/mongodb/bin/
 ln -sf /opt/mongodb/bin/mongosh /usr/local/bin/mongosh
 
-# --- 5. 清理临时文件 ---
-# 清理下载的 DEB 文件和解压目录
-#rm -f /root/mongodb-mongosh_2.5.9_arm64.deb
-#rm -rf /data/mongosh
+# 清理临时文件
+# rm -f /root/mongodb-mongosh_2.5.9_arm64.deb
+# rm -rf /data/mongosh
 
-# 简单的完成提示
-echo "mongosh 安装完成。在任何位置运行 'mongosh --version' 即可验证。"
+echo
+echo "✅ mongosh 安装完成"
 
 echo
 echo
-echo "==========     03  创建 mongodb 用户  ─=≡Σ((( つ•̀ω•́)つ           ==================="
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 数据库配置: 创建用户与数据库                                                 │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
 
 # 客户端连接并创建用户
-echo "   -> 创建 'scp' 用户..."
+echo "📌 创建管理员用户 'scp'..."
 # 直接使用全局可用的 'mongosh' 命令
 # 指定端口 37017
 mongosh --port 37017 --eval 'db.getSiblingDB("admin").createUser({ user: "scp", pwd: "11223344", roles: [{ role: "root", db: "admin" }] });'
 
 # 验证登录
-echo "   -> 验证用户登录..."
+echo
+echo "📌 验证用户登录..."
 mongosh --port 37017 -u "scp" -p "11223344" --authenticationDatabase "admin" --eval 'print("User scp connected successfully.")'
 
+# 创建 supercache 数据库
+echo
+echo "📌 创建 'supercache' 数据库..."
+mongosh --port 37017 -u "scp" -p "11223344" --authenticationDatabase "admin" --eval 'db.getSiblingDB("supercache").createCollection("_init"); print("Database supercache created successfully.");'
+
 # 简单的完成提示
-echo "MongoDB 用户创建步骤执行完毕。"
+echo
+echo "✅ 用户与数据库配置完成"
 
 
 
-# --- 新增 SystemD 配置模块（不启动） ---
 echo
 echo
-echo "==========     04  集成 SystemD 服务配置 (只创建不启动)  ─=≡Σ((( つ•̀ω•́)つ           ==================="
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ SystemD 服务: 配置系统服务（仅配置，不启动）                                 │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
 SYSTEMD_FILE="/etc/systemd/system/mongodb.service"
 CONFIG_FILE="/data/mongodb/mongodb.conf"
 MONGOD_BIN="/opt/mongodb/bin/mongod"
 
-echo "--- 1. 创建 mongodb.service 文件 ---"
+echo "📌 创建 mongodb.service 文件..."
 # 使用 root 用户运行，与先前脚本中 root 角色的选择保持一致。
 cat > "${SYSTEMD_FILE}" << EOF
 [Unit]
@@ -165,27 +207,96 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+
+echo "   ✓ 服务文件已创建: ${SYSTEMD_FILE}"
+
 echo
-echo "   -> SystemD 服务文件已创建: ${SYSTEMD_FILE}"
-echo
-echo "--- 2. 重新加载 SystemD 配置 ---"
+echo "📌 重新加载 SystemD 配置..."
 systemctl daemon-reload
 
-echo "--- 3. 启用服务 (设置开机自启) ---"
-echo "   -> **注意：未执行 systemctl enable**"
-# systemctl enable mongodb.service # 保持注释或移除，您会手动处理
-
-echo "--- 4. 启动 MongoDB 服务 ---"
-echo "   -> **注意：未执行 systemctl start**"
-# systemctl start mongodb.service # 保持注释或移除，您会手动处理
+echo
+echo "   ℹ️  服务已配置但未启用开机自启"
+echo "   ℹ️  服务未自动启动，当前通过 mongod 直接运行"
 
 
+echo
 
 echo
 echo
 echo
-echo "******** ( ´∀｀)つt[ okk～ ]    ********"
+echo "================================================================================"
+echo "                          ✨ 部署完成总览                                      "
+echo "================================================================================"
 echo
-echo "MongoDB 部署和设置已完成。请使用 'ps aux | grep mongod' 确认进程运行。"
+echo "✅ 已完成的操作："
+echo "   1. 系统基础更新 + 安装依赖库（libcurl4, libgssapi-krb5-2 等）"
+echo "   2. 下载并安装 MongoDB 8.2.1 (TGZ 二进制版本)"
+echo "   3. 下载并安装 mongosh 2.5.9 客户端工具"
+echo "   4. 创建管理员用户 'scp' (密码: 11223344)"
+echo "   5. 创建项目数据库 'supercache'"
+echo "   6. 配置 SystemD 服务文件（未启用开机自启）"
 echo
+echo "📂 关键目录："
+echo "   • 二进制文件   /opt/mongodb/bin/"
+echo "   • 配置文件     /data/mongodb/mongodb.conf"
+echo "   • 数据目录     /var/lib/mongodb/"
+echo "   • 日志目录     /var/log/mongodb/"
+echo "   • PID 文件     /var/run/mongodb/mongod.pid"
+echo
+echo "🔧 配置要点："
+echo "   • 监听端口     37017 (非默认端口)"
+echo "   • 绑定地址     0.0.0.0 (允许远程连接)"
+echo "   • 认证模式     已启用 (需要用户名密码)"
+echo "   • 管理员       scp / 11223344 (admin 数据库)"
+echo "   • 项目数据库   supercache"
+echo "   • 运行用户     root"
+echo
+echo "================================================================================"
+echo "                          🔍 验证步骤                                          "
+echo "================================================================================"
+echo
+echo "1️⃣  检查进程是否运行："
+echo "   ps aux | grep mongod"
+echo
+echo "2️⃣  检查端口是否监听："
+echo "   netstat -tuln | grep 37017"
+echo "   # 或使用: ss -tuln | grep 37017"
+echo
+echo "3️⃣  查看日志文件："
+echo "   tail -f /var/log/mongodb/mongod.log"
+echo
+echo "4️⃣  连接到 supercache 数据库（推荐）："
+echo "   mongosh --port 37017 -u scp -p 11223344 --authenticationDatabase admin supercache"
+echo
+echo "5️⃣  验证 mongosh 版本："
+echo "   mongosh --version"
+echo
+echo "6️⃣  检查 SystemD 服务状态："
+echo "   systemctl status mongodb"
+echo
+echo "================================================================================"
+echo "                          ⚙️  SystemD 服务管理                                 "
+echo "================================================================================"
+echo
+echo "启用开机自启："
+echo "   systemctl enable mongodb.service"
+echo
+echo "服务控制命令："
+echo "   systemctl start mongodb      # 启动服务"
+echo "   systemctl stop mongodb       # 停止服务"
+echo "   systemctl restart mongodb    # 重启服务"
+echo
+echo "================================================================================"
+echo "                          ⚠️  安全提示                                         "
+echo "================================================================================"
+echo
+echo "  • 当前使用 ROOT 用户运行 MongoDB（生产环境建议创建专用用户）"
+echo "  • 默认密码为 '11223344'，生产环境请务必修改为强密码"
+echo "  • 配置文件位于 /data/mongodb/mongodb.conf，可根据需要调整"
+echo "  • 远程连接需确保防火墙开放 37017 端口"
+echo "  • SystemD 服务已配置但未启用，当前通过直接启动 mongod 运行"
+echo
+echo "================================================================================"
+echo "                          🎉 部署成功！                                        "
+echo "================================================================================"
 echo
