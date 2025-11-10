@@ -174,11 +174,39 @@ echo
 echo "✅ 用户与数据库配置完成"
 
 
+echo
+echo
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 安全配置: 启用认证模式                                                       │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
+
+echo "📌 停止当前 MongoDB 进程..."
+# 通过 PID 文件停止进程
+if [ -f "${PID_DIR}/mongod.pid" ]; then
+    MONGOD_PID=$(cat "${PID_DIR}/mongod.pid")
+    kill "${MONGOD_PID}"
+    sleep 3
+    echo "   ✓ MongoDB 进程已停止 (PID: ${MONGOD_PID})"
+else
+    echo "   ⚠️  未找到 PID 文件，尝试通过进程名停止..."
+    pkill -f "mongod.*${CONFIG_FILE}"
+    sleep 3
+fi
+
+echo
+echo "📌 修改配置文件，启用认证..."
+sed -i 's/authorization: disabled/authorization: enabled/g' "${CONFIG_FILE}"
+echo "   ✓ 配置已更新: authorization: enabled"
+
+echo
+echo "✅ 安全配置完成"
+
 
 echo
 echo
 echo "┌─────────────────────────────────────────────────────────────────────────────┐"
-echo "│ SystemD 服务: 配置系统服务（仅配置，不启动）                                 │"
+echo "│ SystemD 服务: 配置并启动系统服务                                             │"
 echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
 SYSTEMD_FILE="/etc/systemd/system/mongodb.service"
@@ -215,8 +243,25 @@ echo "📌 重新加载 SystemD 配置..."
 systemctl daemon-reload
 
 echo
-echo "   ℹ️  服务已配置但未启用开机自启"
-echo "   ℹ️  服务未自动启动，当前通过 mongod 直接运行"
+echo "📌 启动 MongoDB 服务..."
+systemctl start mongodb
+
+echo
+echo "📌 启用开机自启..."
+systemctl enable mongodb
+
+sleep 3
+
+echo
+echo "📌 检查服务状态..."
+if systemctl is-active --quiet mongodb; then
+    echo "   ✓ MongoDB 服务运行正常"
+else
+    echo "   ⚠️  服务启动异常，请检查日志: journalctl -u mongodb -n 50"
+fi
+
+echo
+echo "✅ SystemD 服务配置并启动完成"
 
 
 echo
@@ -234,7 +279,9 @@ echo "   2. 下载并安装 MongoDB 8.2.1 (TGZ 二进制版本)"
 echo "   3. 下载并安装 mongosh 2.5.9 客户端工具"
 echo "   4. 创建管理员用户 'scp' (密码: 11223344)"
 echo "   5. 创建项目数据库 'supercache'"
-echo "   6. 配置 SystemD 服务文件（未启用开机自启）"
+echo "   6. 启用认证模式 (authorization: enabled)"
+echo "   7. 配置 SystemD 服务并启用开机自启"
+echo "   8. 使用 SystemD 启动 MongoDB 服务"
 echo
 echo "📂 关键目录："
 echo "   • 二进制文件   /opt/mongodb/bin/"
@@ -246,10 +293,11 @@ echo
 echo "🔧 配置要点："
 echo "   • 监听端口     37017 (非默认端口)"
 echo "   • 绑定地址     0.0.0.0 (允许远程连接)"
-echo "   • 认证模式     已启用 (需要用户名密码)"
+echo "   • 认证模式     已启用 (authorization: enabled)"
 echo "   • 管理员       scp / 11223344 (admin 数据库)"
 echo "   • 项目数据库   supercache"
 echo "   • 运行用户     root"
+echo "   • 服务状态     已启动并启用开机自启"
 echo
 echo "================================================================================"
 echo "                          🔍 验证步骤                                          "
@@ -274,17 +322,22 @@ echo
 echo "6️⃣  检查 SystemD 服务状态："
 echo "   systemctl status mongodb"
 echo
+echo "7️⃣  查看服务日志："
+echo "   journalctl -u mongodb -f"
+echo
 echo "================================================================================"
 echo "                          ⚙️  SystemD 服务管理                                 "
 echo "================================================================================"
 echo
-echo "启用开机自启："
-echo "   systemctl enable mongodb.service"
-echo
 echo "服务控制命令："
-echo "   systemctl start mongodb      # 启动服务"
+echo "   systemctl status mongodb     # 查看服务状态"
 echo "   systemctl stop mongodb       # 停止服务"
 echo "   systemctl restart mongodb    # 重启服务"
+echo "   systemctl disable mongodb    # 禁用开机自启"
+echo
+echo "查看日志："
+echo "   journalctl -u mongodb -f     # 实时查看服务日志"
+echo "   journalctl -u mongodb -n 100 # 查看最近 100 行日志"
 echo
 echo "================================================================================"
 echo "                          ⚠️  安全提示                                         "
@@ -294,7 +347,8 @@ echo "  • 当前使用 ROOT 用户运行 MongoDB（生产环境建议创建专
 echo "  • 默认密码为 '11223344'，生产环境请务必修改为强密码"
 echo "  • 配置文件位于 /data/mongodb/mongodb.conf，可根据需要调整"
 echo "  • 远程连接需确保防火墙开放 37017 端口"
-echo "  • SystemD 服务已配置但未启用，当前通过直接启动 mongod 运行"
+echo "  • 认证模式已启用，必须使用用户名密码连接"
+echo "  • MongoDB 已通过 SystemD 管理，开机自动启动"
 echo
 echo "================================================================================"
 echo "                          🎉 部署成功！                                        "
