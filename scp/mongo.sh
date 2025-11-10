@@ -40,7 +40,8 @@ mkdir -p "${CONFIG_DIR}"
 
 # 下载 MongoDB 配置文件到指定目录
 echo "   --> 下载配置文件到 ${CONFIG_FILE}"
-wget -O "${CONFIG_FILE}" https://raw.githubusercontent.com/BLOSEregedit/shtools/refs/heads/main/preHeat/mongodb.conf
+wget -O "${CONFIG_FILE}" https://raw.githubusercontent.com/BLOSEregedit/shtools/refs/heads/main/scp/mongodb.conf
+
 
 # 下载 MongoDB 压缩包
 echo "   --> 下载 MongoDB 二进制压缩包 (${MONGODB_TGZ})"
