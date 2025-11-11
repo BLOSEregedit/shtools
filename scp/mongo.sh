@@ -3,9 +3,12 @@
 echo
 echo "================================================================================"
 echo "                 🚀 MongoDB 8.2.1 自动化部署脚本                               "
+echo "                           版本: V2.0                                          "
 echo "================================================================================"
 echo
 echo "📦 部署版本: MongoDB 8.2.1 (TGZ 二进制模式)"
+echo "📌 脚本版本: V2.0"
+echo "📌 支持系统: Debian 和 RedHat/CentOS 系列"
 echo
 echo "📂 目录规划:"
 echo "   • 二进制文件  /opt/mongodb/bin/"
@@ -17,22 +20,94 @@ echo "==========================================================================
 echo
 echo
 echo "┌─────────────────────────────────────────────────────────────────────────────┐"
+echo "│ 步骤 0/4: 系统环境检测                                                       │"
+echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
+
+# 检测操作系统类型
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS_ID="${ID}"
+    OS_VERSION="${VERSION_ID}"
+    OS_NAME="${PRETTY_NAME}"
+elif [ -f /etc/redhat-release ]; then
+    OS_ID="rhel"
+    OS_NAME=$(cat /etc/redhat-release)
+else
+    echo "❌ 无法识别操作系统类型"
+    exit 1
+fi
+
+echo "📌 检测到操作系统信息："
+echo "   • 系统名称: ${OS_NAME}"
+echo "   • 系统ID: ${OS_ID}"
+echo "   • 系统版本: ${OS_VERSION}"
+echo
+
+# 根据系统类型设置相关变量
+if [[ "${OS_ID}" =~ ^(debian)$ ]]; then
+    SYSTEM_TYPE="debian"
+    PKG_MANAGER="apt"
+    MONGODB_TGZ="mongodb-linux-x86_64-debian12-8.2.1.tgz"
+    MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_TGZ}"
+    MONGOSH_PKG="mongodb-mongosh_2.5.9_amd64.deb"
+    MONGOSH_URL="https://downloads.mongodb.com/compass/${MONGOSH_PKG}"
+    echo "✅ 识别为 Debian 系统"
+elif [[ "${OS_ID}" =~ ^(rhel|centos|rocky|almalinux)$ ]]; then
+    SYSTEM_TYPE="redhat"
+    PKG_MANAGER="dnf"
+    MONGODB_TGZ="mongodb-linux-x86_64-rhel93-8.2.1.tgz"
+    MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_TGZ}"
+    MONGOSH_PKG="mongodb-mongosh-2.5.9.x86_64.rpm"
+    MONGOSH_URL="https://downloads.mongodb.com/compass/${MONGOSH_PKG}"
+    echo "✅ 识别为 RedHat/CentOS 系统"
+else
+    echo "❌ 不支持的操作系统: ${OS_ID}"
+    echo "   目前仅支持: Debian 和 RedHat/CentOS 系列"
+    exit 1
+fi
+
+echo
+echo "📦 将使用以下安装包："
+echo "   • MongoDB: ${MONGODB_TGZ}"
+echo "   • Mongosh: ${MONGOSH_PKG}"
+echo "   • 包管理器: ${PKG_MANAGER}"
+echo
+
+echo
+echo
+echo "┌─────────────────────────────────────────────────────────────────────────────┐"
 echo "│ 步骤 1/4: 系统基础更新与依赖安装                                             │"
 echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
-# 更新系统包列表并升级已安装的包
-echo "📌 更新系统软件包..."
-apt update -y
-apt upgrade -y
 
-# 安装必要的工具
-echo
-echo "📌 安装基础工具 (wget, curl, bc)..."
-apt install wget curl bc -y
+# 根据系统类型执行不同的包管理命令
+if [ "${SYSTEM_TYPE}" = "debian" ]; then
+    # Debian 系统
+    echo "📌 更新系统软件包 (Debian - apt)..."
+    apt update -y
+    apt upgrade -y
 
-echo
-echo "📌 安装 MongoDB 运行时依赖库..."
-apt install libcurl4 libgssapi-krb5-2 libldap-common libwrap0 libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit openssl liblzma5 -y
+    echo
+    echo "📌 安装基础工具 (wget, curl, bc)..."
+    apt install wget curl bc -y
+
+    echo
+    echo "📌 安装 MongoDB 运行时依赖库..."
+    apt install libcurl4 libgssapi-krb5-2 libldap-common libwrap0 libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit openssl liblzma5 -y
+else
+    # RedHat/CentOS 系统
+    echo "📌 更新系统软件包 (RedHat/CentOS - dnf)..."
+    dnf update -y
+
+    echo
+    echo "📌 安装基础工具 (wget, curl, bc)..."
+    dnf install wget curl bc -y
+
+    echo
+    echo "📌 安装 MongoDB 运行时依赖库..."
+    dnf install libcurl openssl xz-libs cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs openldap -y
+fi
 
 echo
 echo "✅ 系统依赖安装完成"
@@ -42,8 +117,6 @@ echo "┌───────────────────────�
 echo "│ 步骤 2/4: 下载 MongoDB 文件                                                  │"
 echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
-MONGODB_TGZ="mongodb-linux-x86_64-debian12-8.2.1.tgz"
-MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_TGZ}"
 DOWNLOAD_DIR="/root"
 CONFIG_DIR="/data/mongodb"
 CONFIG_FILE="${CONFIG_DIR}/mongodb.conf"
@@ -63,6 +136,7 @@ wget -O "${CONFIG_FILE}" https://raw.githubusercontent.com/BLOSEregedit/shtools/
 # 下载 MongoDB 压缩包
 echo
 echo "📌 下载 MongoDB 二进制包..."
+echo "   → 系统类型: ${SYSTEM_TYPE}"
 echo "   → 文件: ${MONGODB_TGZ}"
 echo "   → 大小: ~500MB，请耐心等待..."
 wget -O "${DOWNLOAD_DIR}/${MONGODB_TGZ}" "${MONGODB_URL}"
@@ -150,25 +224,48 @@ echo "┌───────────────────────�
 echo "│ 附加工具: 安装 mongosh 客户端                                                │"
 echo "└─────────────────────────────────────────────────────────────────────────────┘"
 echo
-echo "📌 准备目录..."
-mkdir -p /data/mongosh /opt/mongodb/bin
 
-echo
-echo "📌 下载 mongosh 2.5.9 (DEB 包)..."
-wget -O /root/mongodb-mongosh_2.5.9_arm64.deb https://downloads.mongodb.com/compass/mongodb-mongosh_2.5.9_amd64.deb
+if [ "${SYSTEM_TYPE}" = "debian" ]; then
+    # Debian 系统 - 使用 DEB 包
+    echo "📌 准备目录..."
+    mkdir -p /data/mongosh /opt/mongodb/bin
 
-echo
-echo "📌 解压 DEB 包..."
-dpkg -x /root/mongodb-mongosh_2.5.9_arm64.deb /data/mongosh
+    echo
+    echo "📌 下载 mongosh 2.5.9 (Debian - DEB 包)..."
+    wget -O /root/${MONGOSH_PKG} ${MONGOSH_URL}
 
-echo
-echo "📌 移动可执行文件并创建软链接..."
-mv /data/mongosh/usr/bin/mongosh /opt/mongodb/bin/
-ln -sf /opt/mongodb/bin/mongosh /usr/local/bin/mongosh
+    echo
+    echo "📌 解压 DEB 包..."
+    dpkg -x /root/${MONGOSH_PKG} /data/mongosh
 
-# 清理临时文件
-# rm -f /root/mongodb-mongosh_2.5.9_arm64.deb
-# rm -rf /data/mongosh
+    echo
+    echo "📌 移动可执行文件并创建软链接..."
+    mv /data/mongosh/usr/bin/mongosh /opt/mongodb/bin/
+    ln -sf /opt/mongodb/bin/mongosh /usr/local/bin/mongosh
+
+    # 清理临时文件
+    # rm -f /root/${MONGOSH_PKG}
+    # rm -rf /data/mongosh
+else
+    # RedHat/CentOS 系统 - 使用 RPM 包
+    echo "📌 准备目录..."
+    mkdir -p /opt/mongodb/bin
+
+    echo
+    echo "📌 下载 mongosh 2.5.9 (RedHat/CentOS - RPM 包)..."
+    wget -O /root/${MONGOSH_PKG} ${MONGOSH_URL}
+
+    echo
+    echo "📌 安装 RPM 包..."
+    rpm -ivh /root/${MONGOSH_PKG}
+
+    echo
+    echo "📌 创建软链接..."
+    ln -sf /usr/bin/mongosh /opt/mongodb/bin/mongosh
+
+    # 清理临时文件
+    # rm -f /root/${MONGOSH_PKG}
+fi
 
 echo
 echo "✅ mongosh 安装完成"
@@ -298,12 +395,19 @@ echo
 echo
 echo "================================================================================"
 echo "                          ✨ 部署完成总览                                      "
+echo "                           脚本版本: V2.0                                      "
 echo "================================================================================"
 echo
+echo "🖥️  服务器信息："
+echo "   • 操作系统: ${OS_NAME}"
+echo "   • 系统类型: ${SYSTEM_TYPE}"
+echo "   • 包管理器: ${PKG_MANAGER}"
+echo "   • 系统内存: ${TOTAL_MEM_MB} MB"
+echo
 echo "✅ 已完成的操作："
-echo "   1. 系统基础更新 + 安装依赖库（libcurl4, libgssapi-krb5-2 等）"
-echo "   2. 下载并安装 MongoDB 8.2.1 (TGZ 二进制版本)"
-echo "   3. 下载并安装 mongosh 2.5.9 客户端工具"
+echo "   1. 系统基础更新 + 安装依赖库"
+echo "   2. 下载并安装 MongoDB 8.2.1 (${MONGODB_TGZ})"
+echo "   3. 下载并安装 mongosh 2.5.9 (${MONGOSH_PKG})"
 echo "   4. 根据服务器内存自动配置最佳缓存参数 (cacheSizeGB)"
 echo "   5. 创建管理员用户 'scp' (密码: 11223344)"
 echo "   6. 创建项目数据库 'supercache'"
