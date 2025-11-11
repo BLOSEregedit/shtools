@@ -27,8 +27,8 @@ apt upgrade -y
 
 # 安装必要的工具
 echo
-echo "📌 安装基础工具 (wget, curl)..."
-apt install wget curl -y
+echo "📌 安装基础工具 (wget, curl, bc)..."
+apt install wget curl bc -y
 
 echo
 echo "📌 安装 MongoDB 运行时依赖库..."
@@ -107,6 +107,33 @@ echo
 echo "┌─────────────────────────────────────────────────────────────────────────────┐"
 echo "│ 步骤 4/4: 启动服务与配置管理                                                 │"
 echo "└─────────────────────────────────────────────────────────────────────────────┘"
+echo
+
+# 自动配置 cacheSizeGB
+echo "📌 检测服务器内存并配置缓存大小..."
+# 获取系统总内存（单位：MB）
+TOTAL_MEM_MB=$(free -m | awk '/^Mem:/{print $2}')
+echo "   → 检测到系统总内存: ${TOTAL_MEM_MB} MB"
+
+# 计算 cacheSizeGB
+# 公式: (总内存 - 1GB) / 2，最小 0.25GB
+CACHE_SIZE_MB=$(( (TOTAL_MEM_MB - 1024) / 2 ))
+
+# 确保最小值为 256MB (0.25GB)
+if [ ${CACHE_SIZE_MB} -lt 256 ]; then
+    CACHE_SIZE_MB=256
+fi
+
+# 转换为 GB（保留两位小数）
+CACHE_SIZE_GB=$(echo "scale=2; ${CACHE_SIZE_MB} / 1024" | bc)
+
+echo "   → 计算建议缓存大小: ${CACHE_SIZE_GB} GB"
+
+# 修改配置文件中的 cacheSizeGB
+sed -i "s/cacheSizeGB: [0-9]\+\(\.[0-9]\+\)\?/cacheSizeGB: ${CACHE_SIZE_GB}/g" "${CONFIG_FILE}"
+
+echo "   ✓ 配置文件已更新: cacheSizeGB = ${CACHE_SIZE_GB} GB"
+
 echo
 echo "📌 启动 MongoDB 进程..."
 # 依赖配置文件中的 fork 选项在后台运行
@@ -277,11 +304,13 @@ echo "✅ 已完成的操作："
 echo "   1. 系统基础更新 + 安装依赖库（libcurl4, libgssapi-krb5-2 等）"
 echo "   2. 下载并安装 MongoDB 8.2.1 (TGZ 二进制版本)"
 echo "   3. 下载并安装 mongosh 2.5.9 客户端工具"
-echo "   4. 创建管理员用户 'scp' (密码: 11223344)"
-echo "   5. 创建项目数据库 'supercache'"
-echo "   6. 启用认证模式 (authorization: enabled)"
-echo "   7. 配置 SystemD 服务并启用开机自启"
-echo "   8. 使用 SystemD 启动 MongoDB 服务"
+echo "   4. 根据服务器内存自动配置最佳缓存参数 (cacheSizeGB)"
+echo "   5. 创建管理员用户 'scp' (密码: 11223344)"
+echo "   6. 创建项目数据库 'supercache'"
+echo "   7. 启用认证模式 (authorization: enabled)"
+echo "   8. 配置 SystemD 服务并启用开机自启"
+echo "   9. 使用 SystemD 启动 MongoDB 服务"
+
 echo
 echo "📂 关键目录："
 echo "   • 二进制文件   /opt/mongodb/bin/"
@@ -294,6 +323,7 @@ echo "🔧 配置要点："
 echo "   • 监听端口     37017 (非默认端口)"
 echo "   • 绑定地址     0.0.0.0 (允许远程连接)"
 echo "   • 认证模式     已启用 (authorization: enabled)"
+echo "   • 缓存大小     ${CACHE_SIZE_GB} GB (已根据服务器内存 ${TOTAL_MEM_MB} MB 自动优化)"
 echo "   • 管理员       scp / 11223344 (admin 数据库)"
 echo "   • 项目数据库   supercache"
 echo "   • 运行用户     root"
