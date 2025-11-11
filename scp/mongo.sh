@@ -89,8 +89,8 @@ if [ "${SYSTEM_TYPE}" = "debian" ]; then
     apt upgrade -y
 
     echo
-    echo "📌 安装基础工具 (wget, curl, bc)..."
-    apt install wget curl bc -y
+    echo "📌 安装基础工具 (wget, curl, bc, tar)..."
+    apt install wget curl bc tar -y
 
     echo
     echo "📌 安装 MongoDB 运行时依赖库..."
@@ -101,8 +101,8 @@ else
     dnf update -y
 
     echo
-    echo "📌 安装基础工具 (wget, curl, bc)..."
-    dnf install wget curl bc -y
+    echo "📌 安装基础工具 (wget, curl, bc, tar)..."
+    dnf install wget curl bc tar -y
 
     echo
     echo "📌 安装 MongoDB 运行时依赖库..."
