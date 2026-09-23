@@ -16,6 +16,10 @@ wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/mongoDB.s
 ## 05 BBRv3
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/BBRv3.sh && chmod +x BBRv3.sh && ./BBRv3.sh
 
+## 06 Caddy 2 官方最新稳定版（Debian 13+ / Ubuntu 24+；先常规升级系统，可能重启服务）
+## 使用 root 执行，需要 wget。
+( cd /root && wget --https-only -O caddy-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/caddy.sh && bash ./caddy-install.sh )
+
 
 ------------------------    02 oneClick 脚本    ----------------------------
 
