@@ -24,6 +24,7 @@ GitHub 下载入口见 `wget.txt`。新机器未安装 wget 时，可上传脚�
 
 ```bash
 bash -n basic/caddy.sh
+bash tests/caddy-candidate.sh
 ```
 
 完整安装与开机启动行为需要在对应 Linux 虚拟机验证，不能在开发用 macOS 上运行安装脚本。

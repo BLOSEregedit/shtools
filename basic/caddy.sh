@@ -54,7 +54,11 @@ install -d -m 0755 "$scratch/lists"
 official_options=(-o Dir::Etc::sourcelist=/etc/apt/sources.list.d/caddy-stable.list
     -o Dir::Etc::sourceparts=- -o "Dir::State::lists=$scratch/lists")
 apt-get "${apt_options[@]}" "${official_options[@]}" -o APT::Update::Error-Mode=any update
-candidate=$(apt-cache "${official_options[@]}" policy caddy | awk '/Candidate:/ {print $2; exit}')
+# 完整读取 APT 输出，避免 awk 提前退出触发 SIGPIPE，并保留真实查询失败。
+if ! policy=$(apt-cache "${official_options[@]}" policy caddy); then
+    fail '读取 Caddy 官方源候选版本失败，请检查上方 APT 错误。'
+fi
+candidate=$(awk '/Candidate:/ && !found {print $2; found=1}' <<< "$policy")
 [[ ${candidate#*:} == 2.* ]] || fail "官方源未提供可安装的 Caddy 2：${candidate:-无}。"
 installed=$(dpkg-query -W -f='${Version}' caddy 2>/dev/null || true)
 if [[ -n $installed ]] && dpkg --compare-versions "$installed" gt "$candidate"; then
