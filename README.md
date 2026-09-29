@@ -20,11 +20,32 @@ GitHub 下载入口见 `wget.txt`。新机器未安装 wget 时，可上传脚�
 
 安装失败会返回非零状态；已完成的系统升级不会自动回滚。源不可用、签名失败、架构无包、配置校验失败或服务启动失败时，按输出排查，不会退回系统旧版 Caddy。端口占用也可能导致默认服务启动失败。
 
+## PostgreSQL 17 / 18 官方稳定版
+
+`basic/PG17.sh` 和 `basic/PG18.sh` 是可单独下载执行的脚本，分别安装对应大版本的最新稳定补丁及客户端，固定大版本，不使用跟随新大版本的 `postgresql` 元包。适用系统与权限要求同上；PGDG 必须仍支持实际发行版代号和架构。
+
+```bash
+sudo bash ./basic/PG17.sh
+# 需要 PostgreSQL 18 的另一台机器使用：
+sudo bash ./basic/PG18.sh
+```
+
+脚本更新 APT 索引、安装基础依赖、配置 PGDG 官方签名源；从隔离的官方索引下载指定版本的服务端和客户端包，再安装依赖。不会执行全系统 `upgrade`。APT 包安装可能重启已有同大版本数据库，重复执行需安排维护窗口。
+
+默认使用 `main` 集群、端口 `5432`、系统用户 `postgres`，配置位于 `/etc/postgresql/<major>/main/`，数据位于 `/var/lib/postgresql/<major>/main/`。通过 `postgresql.service` 的 auto 集群机制启用开机启动，验证实际集群服务和 SQL 返回的运行版本。不会创建业务账号或数据库、修改认证/远程监听、防火墙或迁移数据。
+
+只用于空机器，或同大版本默认集群的重复安装/补丁更新。检测到另一大版本服务端、跟随大版本的元包、非默认集群/端口或冲突的 PGDG 源时停止；不删除集群、不跨大版本升级、不自动降级。不要在同一台机器上依次执行两个脚本。源不可用、签名或依赖失败时中止，不回退到 Debian 自带旧包；已完成的包和源配置修改不会自动回滚。自定义或停止自动启动的集群需要人工处理。
+
+官方依据：https://www.postgresql.org/download/linux/debian/ 。仓库支持和包版本在执行时核对，模拟测试不等于目标系统实机安装验证。
+
 ## 本地验证
 
 ```bash
 bash -n basic/caddy.sh
 bash tests/caddy-candidate.sh
+bash -n basic/PG17.sh
+bash -n basic/PG18.sh
+python3 tests/pg-install.py
 ```
 
 完整安装与开机启动行为需要在对应 Linux 虚拟机验证，不能在开发用 macOS 上运行安装脚本。
