@@ -27,6 +27,9 @@ wget --https-only -O PG17.sh https://raw.githubusercontent.com/BLOSEregedit/shto
 ## 08 PostgreSQL 18 官方最新稳定补丁（与 PG17 二选一，不用于大版本升级）
 wget --https-only -O PG18.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/PG18.sh && bash ./PG18.sh
 
+## 09 Python 最新稳定版（uv 预编译；root；设置 python/python3 默认命令并输出版本）
+wget --https-only -O python-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/python.sh && bash ./python-install.sh && hash -r
+
 ------------------------    02 oneClick 脚本    ----------------------------
 
 ## 01 Akamai-edgeworkers-cli

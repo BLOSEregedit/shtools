@@ -38,6 +38,24 @@ sudo bash ./basic/PG18.sh
 
 官方依据：https://www.postgresql.org/download/linux/debian/ 。仓库支持和包版本在执行时核对，模拟测试不等于目标系统实机安装验证。
 
+## Python 最新稳定版（uv 预编译安装）
+
+`basic/python.sh` 面向 Debian 13+、Ubuntu 24+，以 root 执行。脚本从 Astral 官方安装入口获取最新稳定 uv，再从该版本内置的当前平台发行目录中选择最新普通 CPython 稳定版，排除 alpha/beta/rc 和 free-threaded 变体。不进行源码编译、不执行全系统升级，不安装项目依赖。
+
+```bash
+sudo bash ./basic/python.sh && hash -r
+```
+
+Python 来源为 Astral `python-build-standalone` 预编译发行包，不是 Python 软件基金会发布的 Linux APT 包。版本以最新 uv 的可下载目录为准，可能晚于 Python 官网刚发布的新版本；失败不会回退到旧系统 Python。安装前隔离已有 uv 配置、镜像和项目版本设置，下载使用公开官方渠道；依赖私有代理或特殊证书的网络需要另外处理。
+
+Python 安装在 `/opt/shtools-python/`，uv/uvx 安装在 `/usr/local/bin/`。`python`、`python3` 和对应的 `python3.x` 命令指向新解释器；原有入口备份到 `/var/backups/shtools-python/entrypoints.*`。默认命令依赖 `/usr/local/bin` 在 PATH 中优先于系统目录，不修改 `/usr/bin/python3`、shell 配置、现有虚拟环境或服务配置。应退出虚拟环境后安装；自定义 alias、function 或更靠前的版本管理器可以覆盖默认命令。
+
+脚本先验证 Python 版本、关键标准库和非 root 用户可执行性，再切换入口。最后检查并输出 `python --version` 与 `python3 --version`；下载命令附带 `hash -r`，清除调用终端缓存的旧命令路径。
+
+重复执行会重新获取最新 uv 和最新可下载 Python 稳定版，可能跨 Python 次版本。旧解释器保留，项目需要固定版本时继续使用其虚拟环境或解释器绝对路径。切换后失败不自动回滚；需要恢复时，根据输出的备份目录恢复已有入口，`previously-absent.txt` 记录安装前不存在的入口。uv 使用自定义 Python 目录时，后续管理这些版本需设置 `UV_PYTHON_INSTALL_DIR=/opt/shtools-python`。
+
+官方依据：https://docs.astral.sh/uv/guides/install-python/ 。完整 Linux 安装验收情况见 ROADMAP。
+
 ## 本地验证
 
 ```bash
@@ -46,6 +64,8 @@ bash tests/caddy-candidate.sh
 bash -n basic/PG17.sh
 bash -n basic/PG18.sh
 python3 tests/pg-install.py
+bash -n basic/python.sh
+python3 tests/python-install.py
 ```
 
 完整安装与开机启动行为需要在对应 Linux 虚拟机验证，不能在开发用 macOS 上运行安装脚本。

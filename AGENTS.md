@@ -7,3 +7,5 @@
 - 安装脚本使用 Bash，先检查系统与权限，再修改服务器。Caddy 使用官方 stable APT 源和官方默认目录、用户及 systemd 服务。PostgreSQL 使用 PGDG 官方稳定源，PG17/PG18 保持独立可下载入口，固定大版本；修改公共行为时同步两份脚本并运行 `python3 tests/pg-install.py`。
 - 本地审查不得执行真实安装；使用 `bash -n` 和隔离的命令模拟验证，真实安装须在获授权的 Linux 测试机进行。
 - 临时验证文件放 `.tmp/<task-slug>/`。修改单个组件时不顺带修改其他脚本。
+
+- Python 使用 Astral uv 和预编译发行包，公共解释器在 `/opt/shtools-python`，默认命令在 `/usr/local/bin`；保留 `/usr/bin/python3`。验证入口：`python3 tests/python-install.py`。
