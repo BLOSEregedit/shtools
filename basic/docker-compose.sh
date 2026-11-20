@@ -1,43 +1,20 @@
+#!/usr/bin/env bash
+# 保留原组合入口；安装逻辑统一在 docker.sh，避免两份实现漂移。
+set -Eeuo pipefail
+[[ $# -eq 0 ]] || { printf '错误：本脚本不接受参数。\n' >&2; exit 1; }
+[[ $(uname -s) == Linux && $EUID -eq 0 ]] \
+    || { printf '错误：请在 Linux 上以 root 或 sudo bash 执行。\n' >&2; exit 1; }
 
-## docker
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh && chmod +x docker.sh && ./docker.sh
-
-
-echo
-echo "********    安装 docker-compose  ─=≡Σ((( つ•̀ω•́)つ     ********"
-echo
-echo "01 install "
-echo
-
-# Download and install Docker Compose binary to /root/ directory
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /root/docker-compose
-
-# Add execution permissions to the binary file
-chmod +x /root/docker-compose
-
-echo
-echo "02 配置环境 "
-echo
-
-# Open ~/.bashrc and append export command at the end
-echo 'export PATH="/root:$PATH"' >> ~/.bashrc
-
-# Reload
-source ~/.bashrc
-
-
-echo
-echo "03 创建 yml 文件   -->   /root/docker-compose.yml"
-echo
-
-# Create configuration file
-touch /root/docker-compose.yml
-
-
-echo
-echo "********     安装完成  ( ´∀｀)つt[ ]    ********"
-echo
-docker --version
-echo
-docker-compose --version
-echo
+scratch=$(mktemp -d)
+trap 'rm -rf -- "$scratch"' EXIT
+url=https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh
+if command -v curl >/dev/null; then
+    curl --proto '=https' --proto-redir '=https' -fsSL --retry 3 --connect-timeout 20 --max-time 180 \
+        "$url" -o "$scratch/docker.sh"
+elif command -v wget >/dev/null; then
+    wget --https-only --timeout=30 --tries=3 -O "$scratch/docker.sh" "$url"
+else
+    printf '错误：需要 curl 或 wget 下载安装脚本。\n' >&2
+    exit 1
+fi
+bash "$scratch/docker.sh"

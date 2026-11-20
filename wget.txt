@@ -4,11 +4,11 @@
 ## 01 curl-mtr-dig
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/curl-mtr-dig.sh && chmod +x curl-mtr-dig.sh && ./curl-mtr-dig.sh
 
-## 02 docker
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh && chmod +x docker.sh && ./docker.sh
+## 02 Docker Engine + Compose 插件官方最新稳定版（Debian 13+ / Ubuntu 24+；root）
+wget --https-only -O docker-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh && bash ./docker-install.sh
 
-## 03 docker-compose 「自动安装 docker」
-wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker-compose.sh && chmod +x docker-compose.sh && ./docker-compose.sh
+## 03 Docker + Docker Compose 组合入口（同上，不再额外安装独立 docker-compose）
+wget --https-only -O docker-compose-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker-compose.sh && bash ./docker-compose-install.sh
 
 ## 04 mongoDB 「须先装好 docker-compose」
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/mongoDB.sh && chmod +x mongoDB.sh && ./mongoDB.sh

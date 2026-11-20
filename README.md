@@ -2,6 +2,26 @@
 
 服务器脚本合集：`basic/` 为单组件脚本，`oneclick/` 为组合入口，`preHeat/` 与 `scp/` 为专用部署。命令索引见 `wget.txt`，进度和验证边界见 `ROADMAP.md`。
 
+## Docker Engine + Docker Compose 官方稳定版
+
+`basic/docker.sh` 面向使用 systemd 的 Debian 13+、Ubuntu 24+ 服务器，以 root 执行。按实际系统选择 Docker 官方 Debian 或 Ubuntu stable APT 源和当前架构、发行版代号；官方必须仍提供相应包，未来发行版不能仅凭版本检查视为已验证。
+
+每次执行从官方签名 stable 索引动态选择最新的 `docker-ce`、`docker-ce-cli`、`containerd.io`、`docker-buildx-plugin` 和 `docker-compose-plugin`，不固定 Docker 或 Compose 的大版本、补丁版本，也不设置 APT hold 或 pin。下载时使用本次查询得到的精确版本，避免其他源或已安装版本抢占候选。安装后核对全部包版本、Docker 服务及开机启动、实际 Engine 版本、Compose 和 Buildx 命令。
+
+以 root 在服务器当前目录下载并执行组合入口：
+
+```bash
+wget --https-only -O docker-compose-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker-compose.sh && bash ./docker-compose-install.sh
+```
+
+`basic/docker-compose.sh` 保留原组合入口，只下载并执行同仓库的 `basic/docker.sh`，使用 curl 或 wget，不需要克隆整个仓库。单组件入口也安装完整的 Engine 和 Compose 插件；管理项目使用 `docker compose`，不再额外安装独立的 `docker-compose`，不修改 `.bashrc` 或创建空的项目配置。
+
+脚本不执行全系统升级、不锁定 SSH 等软件包、不卸载冲突包或删除容器数据。检测到发行版自带的 Docker／containerd／runc、不同的 `docker.list` 或另一份 Docker 源时，在安装前停止，交由人工核对；重复执行本脚本生成的同一配置可以更新到当时最新稳定版，已有版本更高时不自动降级。已有旧脚本创建的包锁定、独立程序或 shell 配置不自动清理。
+
+源、签名、下载、安装或服务验证失败会返回非零，不打印安装成功；已完成的包或软件源修改不会自动回滚。安装、更新 Docker 可能重启容器服务，已有业务应安排维护窗口。脚本不会创建业务容器，也不会修改 Docker daemon 配置；Docker 自身会按默认行为管理容器网络。
+
+官方依据：[Debian 安装](https://docs.docker.com/engine/install/debian/) 、[Ubuntu 安装](https://docs.docker.com/engine/install/ubuntu/) 、[Compose 插件](https://docs.docker.com/compose/install/linux/) 。
+
 ## Caddy 2 官方稳定版
 
 `basic/caddy.sh` 面向使用 systemd 的 Debian 13+、Ubuntu 24+ 服务器，以 root 执行。版本号通过检查不等于该版本已实机验证；系统仓库必须仍能正常更新，官方仓库必须提供当前架构的包。
@@ -59,6 +79,9 @@ Python 安装在 `/opt/shtools-python/`，uv/uvx 安装在 `/usr/local/bin/`。`
 ## 本地验证
 
 ```bash
+bash -n basic/docker.sh
+bash -n basic/docker-compose.sh
+python3 tests/docker-install.py
 bash -n basic/caddy.sh
 bash tests/caddy-candidate.sh
 bash -n basic/PG17.sh
