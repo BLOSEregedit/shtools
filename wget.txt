@@ -4,7 +4,7 @@
 ## 01 curl-mtr-dig
 wget https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/curl-mtr-dig.sh && chmod +x curl-mtr-dig.sh && ./curl-mtr-dig.sh
 
-## 02 Docker Engine + Compose 插件官方最新稳定版（Debian 13+ / Ubuntu 24+；root）
+## 02 Docker Engine + Compose 插件官方最新稳定版（Debian 13+ / Ubuntu 24+；root；默认创建 /root/docker-compose.yml，已有文件保留）
 wget --https-only -O docker-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker.sh && bash ./docker-install.sh
 
 ## 03 Docker + Docker Compose 组合入口（同上，不再额外安装独立 docker-compose）

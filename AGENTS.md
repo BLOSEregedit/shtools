@@ -8,6 +8,6 @@
 - 本地审查不得执行真实安装；使用 `bash -n` 和隔离的命令模拟验证，真实安装须在获授权的 Linux 测试机进行。
 - 临时验证文件放 `.tmp/<task-slug>/`。修改单个组件时不顺带修改其他脚本。
 
-- Docker 的安装逻辑统一维护在 `basic/docker.sh`；`basic/docker-compose.sh` 保留为可单独下载的组合入口，拉取前者后执行。按 Debian／Ubuntu 选择 Docker 官方 stable 源，动态安装最新 Engine、CLI、containerd、Buildx 和 Compose 插件，不固定大版本、不安装独立 `docker-compose`、不修改 shell 配置或 SSH 包锁定。验证入口：`python3 tests/docker-install.py`。
+- Docker 的安装逻辑统一维护在 `basic/docker.sh`；`basic/docker-compose.sh` 保留为可单独下载的组合入口，拉取前者后执行。按 Debian／Ubuntu 选择 Docker 官方 stable 源，动态安装最新 Engine、CLI、containerd、Buildx 和 Compose 插件，不固定大版本、不安装独立 `docker-compose`、不修改 shell 配置或 SSH 包锁定。安装验证成功后默认创建权限为 `600` 的空 `/root/docker-compose.yml`，已有文件保留内容和权限，不启动业务容器。验证入口：`python3 tests/docker-install.py`。
 
 - Python 使用 Astral uv 和预编译发行包，公共解释器在 `/opt/shtools-python`，默认命令在 `/usr/local/bin`；保留 `/usr/bin/python3`。验证入口：`python3 tests/python-install.py`。

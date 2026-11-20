@@ -118,4 +118,14 @@ expected_compose=${expected_compose%%-*}
 [[ ${actual_compose#v} == "$expected_compose" ]] || fail "实际 Compose $actual_compose 与安装包 $expected_compose 不一致。"
 printf 'Docker Compose：%s\n' "$actual_compose"
 /usr/bin/docker buildx version
+printf '05 准备默认 Compose 配置文件。\n'
+compose_file=/root/docker-compose.yml
+if [[ -e $compose_file || -L $compose_file ]]; then
+    [[ -f $compose_file ]] || fail "$compose_file 不是有效文件，请人工核对。"
+    printf '保留已有配置：%s\n' "$compose_file"
+else
+    # 只创建新文件；即使同时出现同名文件，也不覆盖已有内容。
+    (umask 077; set -o noclobber; : > "$compose_file")
+    printf '已创建空配置：%s，请先填写服务配置再启动。\n' "$compose_file"
+fi
 printf '安装完成：Docker 已运行并设置开机启动；使用 docker compose 命令管理项目。\n'

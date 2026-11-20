@@ -12,7 +12,7 @@
 
 ## 最近完成
 
-- 2026-11-20 16:21 重写 `basic/docker.sh`，按 Debian／Ubuntu 配置官方 stable 签名源，动态选择五个组件的最新稳定包，不固定大版本；`basic/docker-compose.sh` 保留为独立下载入口并调用统一安装逻辑。移除新增 SSH 包锁定、独立 Compose、shell 配置和空项目文件行为，增加冲突、失败及实际版本检查，同步 README、AGENTS 与 wget 命令索引。
+- 2026-11-20 16:34 Docker 安装入口按 Debian／Ubuntu 配置官方 stable 签名源，动态选择五个组件的最新稳定包，不固定大版本；组合入口调用统一安装逻辑。按用户最新要求，验证安装成功后默认创建权限为 `600` 的空 `/root/docker-compose.yml`，已有文件保留内容、权限和修改时间；移除新增 SSH 包锁定、独立 Compose 和 shell 配置行为，保留冲突、失败及实际版本检查，同步 README、AGENTS 与 wget 命令索引。
 
 - 2026-09-29 14:40 新增 `basic/python.sh`，获取最新 uv 和可下载的最新普通 CPython 稳定版，备份后设置 `/usr/local/bin` 默认命令并在末尾输出版本；同步文档与当前目录 wget 入口。
 
@@ -20,6 +20,8 @@
 - 2026-09-29 14:21 新增 `basic/PG17.sh`、`basic/PG18.sh`，使用 PGDG 官方签名源和固定大版本包；同步 README、AGENTS 和 wget 命令索引，提供独立下载入口。
 
 ## 最近验证
+
+- 2026-11-20 16:34 两个 Docker 脚本 `bash -n`、`git diff --check` 及 `python3 tests/docker-install.py` 的 45 个隔离模拟场景通过；新增验证空文件创建和 `600` 权限、重跑与已有文件内容／权限／修改时间保留、有效链接保留及目录／无效链接失败，原有安装和入口场景全部通过。未进行 Linux 实机安装。
 
 - 2026-11-20 16:21 两个 Docker 脚本 `bash -n`、`git diff --check` 及 `python3 tests/docker-install.py` 的 41 个隔离模拟场景通过，覆盖 Debian／Ubuntu 选源、arm64、重复运行、跨大版本候选、大输出、冲突与不支持系统、预发行／空候选／降级拒绝、下载／安装／服务失败、Engine／Compose 版本不一致、组合入口 curl／wget 下载和失败传播。只读获取 Debian trixie、Ubuntu noble／resolute 的官方 amd64 stable 索引，均包含全部五个包；未执行 Linux 实机安装或容器运行验收。
 

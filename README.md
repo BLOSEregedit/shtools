@@ -14,7 +14,9 @@
 wget --https-only -O docker-compose-install.sh https://raw.githubusercontent.com/BLOSEregedit/shtools/main/basic/docker-compose.sh && bash ./docker-compose-install.sh
 ```
 
-`basic/docker-compose.sh` 保留原组合入口，只下载并执行同仓库的 `basic/docker.sh`，使用 curl 或 wget，不需要克隆整个仓库。单组件入口也安装完整的 Engine 和 Compose 插件；管理项目使用 `docker compose`，不再额外安装独立的 `docker-compose`，不修改 `.bashrc` 或创建空的项目配置。
+`basic/docker-compose.sh` 保留原组合入口，只下载并执行同仓库的 `basic/docker.sh`，使用 curl 或 wget，不需要克隆整个仓库。单组件入口也安装完整的 Engine 和 Compose 插件；管理项目使用 `docker compose`，不再额外安装独立的 `docker-compose`，不修改 `.bashrc`。
+
+安装验证成功后，默认创建权限为 `600` 的空 `/root/docker-compose.yml`；已有文件的内容、权限和修改时间保持原样。路径为目录或无效链接时返回失败。文件初始为空，需要先写入服务配置，再执行 `cd /root && docker compose up -d`；安装脚本不会启动业务容器。已安装 Docker、只需手动创建文件时，以 root 执行 `touch /root/docker-compose.yml`，已有文件的内容不会清空。
 
 脚本不执行全系统升级、不锁定 SSH 等软件包、不卸载冲突包或删除容器数据。检测到发行版自带的 Docker／containerd／runc、不同的 `docker.list` 或另一份 Docker 源时，在安装前停止，交由人工核对；重复执行本脚本生成的同一配置可以更新到当时最新稳定版，已有版本更高时不自动降级。已有旧脚本创建的包锁定、独立程序或 shell 配置不自动清理。
 

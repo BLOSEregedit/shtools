@@ -95,8 +95,9 @@ scenarios = ['debian', 'ubuntu24', 'ubuntu26', 'ubuntu-codename', 'arm64', 'repe
              'duplicate-source', 'update-failed', 'key-failed', 'gpg-failed',
              'source-failed', 'cache-failed', 'none', 'empty', 'beta', 'rc-dash', 'downgrade',
              'download-failed', 'missing-archive', 'install-failed', 'wrong-installed',
-             'service-failed', 'runtime-failed', 'compose-failed', 'wrong-compose']
-successes = set(scenarios[:8])
+             'service-failed', 'runtime-failed', 'compose-failed', 'wrong-compose',
+             'compose-existing', 'compose-link', 'compose-directory', 'compose-broken-link']
+successes = set(scenarios[:8]) | {'compose-existing', 'compose-link'}
 
 
 def prepare(root, scenario):
@@ -108,6 +109,16 @@ def prepare(root, scenario):
         command.write_text(MOCK)
         command.chmod(0o755)
     (root / 'etc/apt/sources.list.d').mkdir(parents=True)
+    (root / 'root').mkdir()
+    compose_file = root / 'root/docker-compose.yml'
+    if scenario == 'compose-existing':
+        compose_file.write_text('services:\n  existing: preserved\n')
+        compose_file.chmod(0o640)
+    if scenario == 'compose-link':
+        (root / 'root/existing.yml').write_text('services:\n  existing: preserved\n')
+        compose_file.symlink_to('existing.yml')
+    if scenario == 'compose-directory': compose_file.mkdir()
+    if scenario == 'compose-broken-link': compose_file.symlink_to('missing.yml')
     distro, version, codename = 'debian', '13', 'trixie'
     if scenario.startswith('ubuntu') or scenario == 'old-ubuntu':
         distro, version, codename = 'ubuntu', '24.04', 'noble'
@@ -134,6 +145,7 @@ def adapt(text, root, scenario):
     text = text.replace('/etc/', str(root / 'etc') + '/')
     text = text.replace('/run/systemd/system', str(root / 'run/systemd/system'))
     text = text.replace('/usr/bin/docker', str(root / 'bin/docker'))
+    text = text.replace('/root/docker-compose.yml', str(root / 'root/docker-compose.yml'))
     text = text.replace('$EUID -eq 0', '1 -eq 0' if scenario == 'non-root' else '0 -eq 0')
     return text.replace('scratch=$(mktemp -d)', 'scratch=$(mktemp -d "$DOCKER_TEST_ROOT/scratch.XXXXXX")')
 
@@ -144,6 +156,8 @@ for scenario in scenarios:
         env = prepare(root, scenario)
         script = root / 'install.sh'
         script.write_text(adapt(source, root, scenario))
+        compose_file = root / 'root/docker-compose.yml'
+        compose_before = (compose_file.read_bytes(), compose_file.stat()) if compose_file.is_file() else None
         result = subprocess.run(['bash', str(script)] + (['extra'] if scenario == 'argument' else []),
                                 env=env, capture_output=True, text=True)
         assert (result.returncode == 0) == (scenario in successes), (scenario, result.stdout, result.stderr)
@@ -158,13 +172,30 @@ for scenario in scenarios:
             assert any(c[0] == 'docker' and c[1:] == ['compose', 'version', '--short'] for c in calls)
             assert ['systemctl', 'enable', '--now', 'docker'] in calls
             assert '安装完成' in result.stdout
+            assert compose_file.is_file()
+            if compose_before:
+                content, metadata = compose_before
+                assert compose_file.read_bytes() == content
+                assert compose_file.stat().st_mode == metadata.st_mode
+                assert compose_file.stat().st_mtime_ns == metadata.st_mtime_ns
+            else:
+                assert compose_file.read_bytes() == b''
+                assert compose_file.stat().st_mode & 0o777 == 0o600
             if scenario == 'repeat':
+                compose_file.write_text('services:\n  existing: preserved\n')
+                before_rerun = compose_file.stat()
                 rerun = subprocess.run(['bash', str(script)], env=env, capture_output=True, text=True)
                 assert rerun.returncode == 0, (rerun.stdout, rerun.stderr)
+                assert compose_file.read_text() == 'services:\n  existing: preserved\n'
+                assert compose_file.stat().st_mtime_ns == before_rerun.st_mtime_ns
         else:
             assert '安装完成' not in result.stdout
-            if scenario not in ('wrong-installed', 'service-failed', 'runtime-failed', 'compose-failed', 'wrong-compose'):
+            if scenario not in ('wrong-installed', 'service-failed', 'runtime-failed', 'compose-failed', 'wrong-compose',
+                                'compose-directory', 'compose-broken-link'):
                 assert not (root / 'installed').exists(), (scenario, calls)
+            if scenario == 'compose-directory': assert compose_file.is_dir()
+            elif scenario == 'compose-broken-link': assert compose_file.is_symlink() and not compose_file.exists()
+            else: assert not compose_file.exists()
         if scenario in ('conflict', 'custom-source', 'duplicate-source', 'old-debian', 'old-ubuntu', 'other-os',
                         'bad-codename', 'no-linux', 'non-root', 'no-systemd', 'argument'):
             assert not any(c[0] == 'apt-get' for c in calls), (scenario, calls)
